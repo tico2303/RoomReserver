@@ -1,29 +1,8 @@
 from __future__ import print_function
-# needs to save date and usedrooms per-user
-# needs to update usedRooms based on the current day
-
 from datetime import datetime
 from datetime import timedelta
 import pickle
 
-"""
-print("datatime().now().strftime()", datetime.now().strftime("%Y/%m/%d"))
-
-curr_date = datetime.now().strftime("%Y/%m/%d")
-
-######convert input string into datetime object
-mydate = "2017/05/02"
-my_date = datetime.strptime(mydate,"%Y/%m/%d");
-print("my_date: ", my_date)
-####################################
-
-########## check for old times: 
-if my_date < datetime.now():
-        print("This date", my_date," is before: ", datetime.today())
-else:
-        print("no less than")
-######################
-"""
 class User:
         def __init__(self):
                 self.roomsNtimes = {}
@@ -32,7 +11,10 @@ class User:
                 pickle.dump(self.roomsNtimes, open('roomsNtimes.pkl','wb'))
 
         def loadData(self):
-                return pickle.load(open('roomsNtimes.pkl','rb'))
+                try:
+                        return pickle.load(open('roomsNtimes.pkl','rb'))
+                except:
+                        return {}
 
         def __convertTime(self, time):
                 return datetime.strptime(time, "%Y/%m/%d")
@@ -54,9 +36,12 @@ class User:
                 
 if __name__ == '__main__':
         
+
         u = User()
+        #check if there is an existing pickeled file
         u.roomsNtimes = u.loadData() 
         """
+        How a date and room are added to user class
         u.addRoom("2017/05/01",213)
         u.addRoom("2017/05/02",214)
         u.addRoom("2017/05/03",215)
@@ -64,11 +49,17 @@ if __name__ == '__main__':
         u.addRoom("2017/04/12",217)
         u.addRoom("2017/04/13",218)
         """
-        #u.save()
+        # How to save the roomsNtimes dict to pickle file
+        # u.save()
 
         print("roomsNtimes: ", u.roomsNtimes)
+        
+        # method that updates roomsNtimes dict and removes
+        # rooms that are ealier than todays date
         u.updateUsedRooms()
         print("roomsNtimes: ", u.roomsNtimes)
+        
+        #Extracting usedRoomsList
         print("usedRooms: ",u.getUsedRooms() )
 
 
